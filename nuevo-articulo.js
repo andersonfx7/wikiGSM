@@ -24,126 +24,106 @@ async function main() {
   console.log('  Nuevo artículo — Wiki GSM');
   console.log('──────────────────────────────────\n');
 
-  // ── Marca ──────────────────────────────────────────
-  const marcaLabel = await preguntar('Marca (ej: Samsung, Apple, Motorola)');
-  if (!marcaLabel) { console.log('\nError: la marca no puede estar vacía.'); process.exit(1); }
-  const marcaSlugSug = toSlug(marcaLabel);
-  const marcaSlug   = await preguntar('Carpeta de la marca', marcaSlugSug);
+  const marcaLabel  = await preguntar('Marca (ej: Xiaomi, Samsung)');
+  const marcaSlug   = await preguntar('Carpeta de la marca', toSlug(marcaLabel));
 
-  // ── Modelo ─────────────────────────────────────────
-  const modeloLabel = await preguntar('Modelo (ej: Galaxy A30s, iPhone 12)');
-  if (!modeloLabel) { console.log('\nError: el modelo no puede estar vacío.'); process.exit(1); }
-  const modeloSlugSug = toSlug(modeloLabel);
-  const modeloSlug    = await preguntar('Carpeta del modelo', modeloSlugSug);
+  const modeloLabel = await preguntar('Modelo (ej: Redmi Note 12)');
+  const modeloSlug  = await preguntar('Carpeta del modelo', toSlug(modeloLabel));
 
-  // ── Artículo ───────────────────────────────────────
-  const titulo = await preguntar('Título del artículo (ej: Cambio de pantalla)');
-  if (!titulo) { console.log('\nError: el título no puede estar vacío.'); process.exit(1); }
-  const descripcion = await preguntar('Descripción corta (para el buscador)');
+  const titulo      = await preguntar('Título del artículo (ej: Cambio de pantalla)');
+  const descripcion = await preguntar('Descripción corta (opcional)');
 
-  const difInput = await preguntar('Dificultad: 1=Fácil  2=Media  3=Difícil', '2');
-  const dificultad = { '1': 'Fácil', '2': 'Media', '3': 'Difícil' }[difInput] ?? 'Media';
+  const difInput    = await preguntar('Dificultad: 1=Fácil  2=Media  3=Difícil', '2');
+  const dificultad  = { '1': 'Fácil', '2': 'Media', '3': 'Difícil' }[difInput] ?? 'Media';
 
-  const archivoSug = toSlug(titulo);
-  const archivoSlug = await preguntar('Nombre del archivo (sin .md)', archivoSug);
+  const archivoSlug = await preguntar('Nombre del archivo (sin .md)', toSlug(titulo));
 
   rl.close();
 
-  // ── Rutas ──────────────────────────────────────────
-  const docsRoot   = join('src', 'content', 'docs');
-  const marcaPath  = join(docsRoot, marcaSlug);
-  const modeloPath = join(marcaPath, modeloSlug);
-  const artPath    = join(modeloPath, `${archivoSlug}.md`);
+  const marcaPath   = join(marcaSlug);
+  const modeloPath  = join(marcaSlug, modeloSlug);
+  const artPath     = join(modeloPath, `${archivoSlug}.md`);
+  const indexPath   = join(modeloPath, 'README.md');
 
   if (existsSync(artPath)) {
-    console.log(`\nError: ese artículo ya existe:\n  ${artPath}`);
+    console.log(`\nEse artículo ya existe:\n  ${artPath}`);
     process.exit(1);
   }
 
   console.log('');
 
-  // ── Crear marca si es nueva ────────────────────────
-  if (!existsSync(marcaPath)) {
-    mkdirSync(marcaPath, { recursive: true });
-    writeFileSync(join(marcaPath, '_dir.yaml'), `label: ${marcaLabel}\ncollapsed: true\n`);
-    agregarMarcaEnConfig(marcaSlug, marcaLabel);
-    console.log(`✅ Marca nueva: ${marcaLabel}`);
-  }
+  // Crear carpetas si no existen
+  mkdirSync(modeloPath, { recursive: true });
 
-  // ── Crear modelo si es nuevo ───────────────────────
-  if (!existsSync(modeloPath)) {
-    mkdirSync(modeloPath, { recursive: true });
-    writeFileSync(join(modeloPath, '_dir.yaml'), `label: ${modeloLabel}\ncollapsed: true\n`);
-    console.log(`✅ Modelo nuevo: ${modeloLabel}`);
-  }
+  // Crear README del modelo si no existe
+  if (!existsSync(indexPath)) {
+    writeFileSync(indexPath,
+`# ${marcaLabel} ${modeloLabel}
 
-  // ── Crear artículo ─────────────────────────────────
-  const hoy = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
-  const contenido = `---
-title: ${titulo}
-description: ${descripcion || 'Pendiente: agregar descripción.'}
+## Artículos
+
+| Artículo | Dificultad |
+|---|---|
+| [${titulo}](${archivoSlug}.md) | ${dificultad} |
+
 ---
 
-| Campo             | Detalle                         |
-|-------------------|---------------------------------|
-| **Marca**         | ${marcaLabel}                   |
-| **Modelo**        | ${modeloLabel}                  |
-| **Componente o falla** | Pendiente: completar       |
-| **Dificultad**    | ${dificultad}                   |
-| **Herramientas**  | Pendiente: completar            |
-| **Última actualización** | ${hoy}                   |
+[← Volver al inicio](../../README.md)
+`);
+    console.log(`✅ Modelo creado: ${modeloPath}/`);
+  } else {
+    // Agregar fila al README del modelo
+    const readme = readFileSync(indexPath, 'utf-8');
+    const fila = `| [${titulo}](${archivoSlug}.md) | ${dificultad} |`;
+    const actualizado = readme.replace(/(\[← Volver)/, `${fila}\n\n$1`);
+    writeFileSync(indexPath, actualizado);
+  }
+
+  // Crear artículo
+  const hoy = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  writeFileSync(artPath,
+`# ${titulo} — ${marcaLabel} ${modeloLabel}
+
+| Campo | Detalle |
+|---|---|
+| **Marca** | ${marcaLabel} |
+| **Modelo** | ${modeloLabel} |
+| **Componente** | Pendiente: completar |
+| **Dificultad** | ${dificultad} |
+| **Herramientas** | Pendiente: completar |
+| **Última actualización** | ${hoy} |
 
 ---
 
 ## Síntoma
 
-Pendiente: describe qué le pasa al equipo.
+${descripcion || 'Pendiente: describe qué le pasa al equipo.'}
 
 ## Diagnóstico
 
-Pendiente: pasos para identificar la causa antes de abrir el equipo.
+Pendiente: pasos para identificar la causa.
 
 ## Procedimiento
 
-> ⚠️ Pendiente: agregar advertencia de seguridad.
+> ⚠️ Pendiente: advertencia de seguridad.
 
 1. Pendiente: paso 1.
 2. Pendiente: paso 2.
-3. Pendiente: continuar los pasos.
 
 ## Notas y advertencias
 
-- Pendiente: agregar notas de seguridad o aclaraciones.
-`;
+- Pendiente: agregar notas.
 
-  writeFileSync(artPath, contenido);
+---
+
+[← Volver al ${modeloLabel}](README.md)
+`);
+
   console.log(`✅ Artículo creado: ${artPath}`);
-  console.log('\n──────────────────────────────────');
-  console.log('  Abre el archivo en VS Code y');
-  console.log('  completa las secciones "Pendiente".');
-  console.log('──────────────────────────────────\n');
-}
-
-function agregarMarcaEnConfig(slug, label) {
-  const configPath = 'astro.config.mjs';
-  const config = readFileSync(configPath, 'utf-8');
-  const marcador = '// <<FIN-SIDEBAR>>';
-
-  if (!config.includes(marcador)) {
-    console.log(`\n⚠️  Agrega esta marca manualmente en astro.config.mjs dentro de sidebar[]:`);
-    console.log(`\n\t\t\t\t{\n\t\t\t\t\tlabel: '${label}',\n\t\t\t\t\tcollapsed: true,\n\t\t\t\t\titems: [{ autogenerate: { directory: '${slug}', collapsed: true } }],\n\t\t\t\t},\n`);
-    return;
-  }
-
-  const bloqueNuevo =
-    `\t\t\t\t{\n\t\t\t\t\tlabel: '${label}',\n\t\t\t\t\tcollapsed: true,\n\t\t\t\t\titems: [{ autogenerate: { directory: '${slug}', collapsed: true } }],\n\t\t\t\t},\n\t\t\t\t${marcador}`;
-
-  const actualizado = config.replace(marcador, bloqueNuevo);
-  writeFileSync(configPath, actualizado);
-  console.log(`✅ astro.config.mjs actualizado con "${label}"`);
+  console.log('\nAbre el archivo en VS Code y completa las secciones "Pendiente".\n');
 }
 
 main().catch(err => {
-  console.error('\nError inesperado:', err.message);
+  console.error('\nError:', err.message);
   process.exit(1);
 });
