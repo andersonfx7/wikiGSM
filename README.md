@@ -10,7 +10,7 @@ Biblioteca de artículos de reparación de celulares.
 | Modelo | Artículos |
 |---|---|
 | [Redmi Note 12](xiaomi/redmi-note-12/) | Pantalla, batería, carga... |
-| [Redmi Note 13 PRO 4G](xiaomi/redmi-note-13-pro-4g/) | Pantalla, batería, carga... |
+| [Redmi Note 13 PRO 4G](xiaomi/redmi-note-13-pro-4g(emerald)/) | Pantalla, batería, carga... |
 
 ---
 
