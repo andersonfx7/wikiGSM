@@ -55,6 +55,12 @@ export default defineConfig({
 					collapsed: true,
 					items: [{ autogenerate: { directory: 'samsung', collapsed: true } }],
 				},
+								{
+					label: 'Xiaomi',
+					collapsed: true,
+					items: [{ autogenerate: { directory: 'xiaomi', collapsed: true } }],
+				},
+				// <<FIN-SIDEBAR>>
 			],
 		}),
 	],
