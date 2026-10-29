@@ -1,49 +1,45 @@
 ---
-title: Título del artículo (ej. Cambio de pantalla)
-description: Descripción corta del artículo para el buscador y las previsualizaciones.
+# PLANTILLA DE ARTÍCULO — WIKI GSM (Software)
+# Copia este archivo a: <marca>/<modelo>/<nombre-del-articulo>.md
 ---
 
-<!--
-  PLANTILLA DE ARTÍCULO — WIKI GSM
-  Copia este archivo a la ruta:
-    src/content/docs/<marca>/<modelo>/<nombre-del-articulo>.md
-  Ejemplo:
-    src/content/docs/samsung/a53/cambio-pantalla.md
-  Luego rellena cada sección con la información del procedimiento.
--->
+# Título del artículo
 
-| Campo             | Detalle                                         |
-|-------------------|-------------------------------------------------|
-| **Marca**         | Pendiente: nombre de la marca                   |
-| **Modelo**        | Pendiente: modelo exacto del equipo             |
-| **Componente o falla** | Pendiente: qué parte o falla cubre este artículo |
-| **Dificultad**    | Fácil / Media / Difícil                         |
-| **Herramientas**  | Pendiente: lista de herramientas necesarias     |
-| **Última actualización** | Pendiente: DD/MM/AAAA                   |
+| Campo | Detalle |
+|---|---|
+| **Marca** | Pendiente |
+| **Modelo** | Pendiente |
+| **Codename** | Pendiente (ej: topaz, spes, cannon) |
+| **Región** | Pendiente (ej: Global, EEA, CN) |
+| **Parche de seguridad** | Pendiente (ej: 2024-10-01) |
+| **Status bootloader** | Pendiente (Bloqueado / Desbloqueado) |
+| **Versión de software** | Pendiente (ej: MIUI 14.0.6, HyperOS 1.0.3) |
+| **Versión de kernel** | Pendiente (ej: 4.19.157) |
+| **Dificultad** | Fácil / Media / Difícil |
+| **Requisitos** | Pendiente (ej: PC, cable USB, SP Flash Tool) |
+| **Última actualización** | Pendiente |
 
 ---
 
 ## Síntoma
 
-Describe qué le pasa al equipo: qué ve o escucha el usuario, cuándo ocurre, si es intermitente.
+Pendiente: describe el problema que presenta el equipo.
 
-## Diagnóstico
+## Causa probable
 
-Pasos para identificar la causa antes de abrir el equipo:
+Pendiente: explica por qué ocurre este problema.
 
-- Paso de diagnóstico 1
-- Paso de diagnóstico 2
-- Pendiente: agregar más pasos de diagnóstico según el caso
+## Requisitos previos
+
+- Pendiente: drivers instalados, apps necesarias, etc.
 
 ## Procedimiento
 
-> ⚠️ Advertencia general de seguridad para este procedimiento.
+> ⚠️ Pendiente: advertencia de seguridad.
 
-1. Paso 1 del procedimiento.
-2. Paso 2 del procedimiento.
-3. Pendiente: continuar numerando los pasos.
+1. Pendiente: paso 1.
+2. Pendiente: paso 2.
 
 ## Notas y advertencias
 
-- Nota de seguridad o aclaración importante.
-- Pendiente: agregar advertencias específicas del procedimiento.
+- Pendiente: agregar notas importantes.

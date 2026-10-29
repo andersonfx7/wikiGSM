@@ -24,26 +24,33 @@ async function main() {
   console.log('  Nuevo artículo — Wiki GSM');
   console.log('──────────────────────────────────\n');
 
-  const marcaLabel  = await preguntar('Marca (ej: Xiaomi, Samsung)');
+  // ── Identificación del equipo ──────────────────────
+  const marcaLabel  = await preguntar('Marca (ej: Xiaomi, Redmi, POCO)');
   const marcaSlug   = await preguntar('Carpeta de la marca', toSlug(marcaLabel));
 
   const modeloLabel = await preguntar('Modelo (ej: Redmi Note 12)');
   const modeloSlug  = await preguntar('Carpeta del modelo', toSlug(modeloLabel));
 
-  const titulo      = await preguntar('Título del artículo (ej: Cambio de pantalla)');
-  const descripcion = await preguntar('Descripción corta (opcional)');
+  const codename    = await preguntar('Codename (ej: topaz, spes, cannon)', 'Pendiente');
+  const region      = await preguntar('Región (ej: Global, EEA, CN)', 'Pendiente');
+  const parche      = await preguntar('Parche de seguridad (ej: 2024-10-01)', 'Pendiente');
+  const bootloader  = await preguntar('Status bootloader (Bloqueado / Desbloqueado)', 'Pendiente');
+  const softVer     = await preguntar('Versión de software (ej: HyperOS 1.0.3, MIUI 14.0.6)', 'Pendiente');
+  const kernelVer   = await preguntar('Versión de kernel (ej: 4.19.157)', 'Pendiente');
 
+  // ── Artículo ───────────────────────────────────────
+  const titulo      = await preguntar('Título del artículo (ej: Bootloop después de actualización)');
+  const descripcion = await preguntar('Descripción corta (opcional)');
   const difInput    = await preguntar('Dificultad: 1=Fácil  2=Media  3=Difícil', '2');
   const dificultad  = { '1': 'Fácil', '2': 'Media', '3': 'Difícil' }[difInput] ?? 'Media';
-
+  const requisitos  = await preguntar('Requisitos (ej: PC, cable USB, SP Flash Tool)', 'Pendiente');
   const archivoSlug = await preguntar('Nombre del archivo (sin .md)', toSlug(titulo));
 
   rl.close();
 
-  const marcaPath   = join(marcaSlug);
-  const modeloPath  = join(marcaSlug, modeloSlug);
-  const artPath     = join(modeloPath, `${archivoSlug}.md`);
-  const indexPath   = join(modeloPath, 'README.md');
+  const modeloPath = join(marcaSlug, modeloSlug);
+  const artPath    = join(modeloPath, `${archivoSlug}.md`);
+  const indexPath  = join(modeloPath, 'README.md');
 
   if (existsSync(artPath)) {
     console.log(`\nEse artículo ya existe:\n  ${artPath}`);
@@ -51,11 +58,9 @@ async function main() {
   }
 
   console.log('');
-
-  // Crear carpetas si no existen
   mkdirSync(modeloPath, { recursive: true });
 
-  // Crear README del modelo si no existe
+  // ── README del modelo ──────────────────────────────
   if (!existsSync(indexPath)) {
     writeFileSync(indexPath,
 `# ${marcaLabel} ${modeloLabel}
@@ -72,14 +77,12 @@ async function main() {
 `);
     console.log(`✅ Modelo creado: ${modeloPath}/`);
   } else {
-    // Agregar fila al README del modelo
     const readme = readFileSync(indexPath, 'utf-8');
     const fila = `| [${titulo}](${archivoSlug}.md) | ${dificultad} |`;
-    const actualizado = readme.replace(/(\[← Volver)/, `${fila}\n\n$1`);
-    writeFileSync(indexPath, actualizado);
+    writeFileSync(indexPath, readme.replace(/(\[← Volver)/, `${fila}\n\n$1`));
   }
 
-  // Crear artículo
+  // ── Artículo ───────────────────────────────────────
   const hoy = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
   writeFileSync(artPath,
 `# ${titulo} — ${marcaLabel} ${modeloLabel}
@@ -88,20 +91,29 @@ async function main() {
 |---|---|
 | **Marca** | ${marcaLabel} |
 | **Modelo** | ${modeloLabel} |
-| **Componente** | Pendiente: completar |
+| **Codename** | ${codename} |
+| **Región** | ${region} |
+| **Parche de seguridad** | ${parche} |
+| **Status bootloader** | ${bootloader} |
+| **Versión de software** | ${softVer} |
+| **Versión de kernel** | ${kernelVer} |
 | **Dificultad** | ${dificultad} |
-| **Herramientas** | Pendiente: completar |
+| **Requisitos** | ${requisitos} |
 | **Última actualización** | ${hoy} |
 
 ---
 
 ## Síntoma
 
-${descripcion || 'Pendiente: describe qué le pasa al equipo.'}
+${descripcion || 'Pendiente: describe el problema que presenta el equipo.'}
 
-## Diagnóstico
+## Causa probable
 
-Pendiente: pasos para identificar la causa.
+Pendiente: explica por qué ocurre este problema.
+
+## Requisitos previos
+
+- Pendiente: drivers, apps necesarias, etc.
 
 ## Procedimiento
 
@@ -112,7 +124,7 @@ Pendiente: pasos para identificar la causa.
 
 ## Notas y advertencias
 
-- Pendiente: agregar notas.
+- Pendiente: agregar notas importantes.
 
 ---
 
