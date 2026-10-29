@@ -25,7 +25,7 @@ jobs:
       - name: Compilar e instalar con Astro
         uses: withastro/action@v3
         with:
-          node-version: 20
+          node-version: 22
 
   deploy:
     name: Publicar en Pages
