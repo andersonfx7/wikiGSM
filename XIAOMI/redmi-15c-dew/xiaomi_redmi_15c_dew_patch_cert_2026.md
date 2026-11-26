@@ -26,6 +26,8 @@ Registro de compatibilidad para **Xiaomi Redmi 15C (`dew`)**: compatible con **H
 * **Herramienta:** DFT Pro `v9.0.0`
 * **Ruta:** `Xiaomi` → `Adb Services` → `Service`
 * **Plataforma seleccionada:** `MTK`
+* **Temp root** 
+* **Repair [ADB]** 
 * **Opción activada:** `Patch Cert 2026`
 
 ---
