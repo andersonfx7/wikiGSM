@@ -32,4 +32,4 @@ Registro de compatibilidad para **Xiaomi Redmi 15C (`dew`)**: compatible con **H
 
 ## Captura de referencia
 
-![DFT Pro v9.0.0 - Xiaomi Redmi 15C Dew](img/dftpro-15c-dew.jpg)
+![DFT Pro v9.0.0 - Xiaomi Redmi 15C Dew](dftpro-15c-dew.jpg)
